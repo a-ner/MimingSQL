@@ -409,18 +409,30 @@ create table Orders
 (
     orderID varchar(10) not null,
     customerID varchar(10) not null,
-    timeOfOrder varchar(10) not null,
+    dateOfOrder varchar(10) not null,
     constraint OrdersPK primary key (orderID),
     constraint OrdersCustomerFK foreign key (customerID) references Customer (customerID)
 );
 
-INSERT INTO Orders(orderID, customerID, timeOfOrder) VALUES
-('42311', '03874', '13:45:59'),
-('47814', '48421', '12:30:32'),
-('47192', '70971', '15:53:12'),
-('75921', '68951', '10:46:14'),
-('90429', '58291', '9:57:12');
-
+INSERT INTO Orders(orderID, customerID, dateOfOrder) VALUES
+('46234', '03874', '2017-04-12'),
+('50655', '19011', '2017-05-30'),
+('59144', '37853', '2017-07-26'),
+('42544', '38921', '2017-08-03'),
+('65372', '48421', '2017-09-15'),
+('52468', '57831', '2017-10-05'),
+('23423', '58291', '2018-02-06'),
+('17117', '59027', '2018-04-23'),
+('36792', '67301', '2018-11-05'),
+('65303', '68951', '2018-11-21'),
+('80191', '69271', '2017-02-02'),
+('76209', '70971', '2017-03-01'),
+('44145', '97047', '2017-03-17'),
+('84269', '03874', '2017-04-04'),
+('70232', '68951', '2017-05-15'),
+('02822', '97047', '2017-06-22'),
+('63540', '37853', '2018-01-25'),
+('77593', '37853', '2018-02-23');
 
 create table Payment
 (
@@ -432,11 +444,24 @@ create table Payment
 );
 
 INSERT INTO Payment(orderID, paymentType, amountTotal) VALUES
-('42311', 'Cash', '30'),
-('47814', 'Cash', '20'),
-('47192', 'Credit', '40'),
-('75921', 'Cash', '100'),
-('90429', 'Credit', '201');
+('46234', 'Cash', '20'),
+('50655', 'Cash', '40'),
+('59144', 'Cash', '100'),
+('42544', 'Credit', '500'),
+('65372', 'Cash', '30'),
+('52468', 'Credit', '50'),
+('23423', 'Credit', '25'),
+('17117', 'Credit', '95'),
+('36792', 'Credit', '420'),
+('65303', 'Credit', '200'),
+('80191', 'Cash', '29'),
+('76209', 'Credit', '190'),
+('44145', 'Credit', '2000'),
+('84269', 'Credit', '29'),
+('70232', 'Credit', '25'),
+('02822', 'Cash', '100'),
+('63540', 'Cash', '120'),
+('77593', 'Credit', '245');
 
 
 create table MenuPricing
@@ -445,13 +470,14 @@ create table MenuPricing
     itemName varchar(50) not null,
     itemPrice varchar(10) not null,
     itemSize varchar(10) not null,
-    constraint MenuPricingPK primary key (menuType, itemName),
+    constraint MenuPricingPK primary key (menuType, itemName, itemSize),
     constraint MenuPricingMenuFK foreign key (menuType) references Menu (menuType),
     constraint MenuPricingMenuItemFK foreign key (itemName) references MenuItem (itemName)
 );
 
 INSERT INTO MenuPricing(menuType, itemName, itemPrice, itemSize) VALUES
 ('Breakfast', 'Kung Pao Chicken', '24.99', 'small'),
+('Breakfast', 'Kung Pao Chicken', '29.99', 'medium'),
 ('Lunch', 'Mushroom Chicken', '13.99', 'medium'),
 ('Dinner', 'Xo Noodles', '6.99', 'large'),
 ('Lunch', 'Brocolli Beef', '22.99', 'medium'),
@@ -490,12 +516,24 @@ create table OrderDetails
 );
 
 INSERT INTO OrderDetails(menuType, itemName, orderID, discountID, quantityOrdered, priceEach) VALUES
-('Breakfast','Kung Pao Chicken', '42311', '41145', '1', '24.99'),
-('Lunch', 'Mushroom Chicken', '47814', '75931', '2', '13.99'),
-('Dinner', 'Xo Noodles', '47192', '58391', '2','6.99'),
-('Lunch', 'Brocolli Beef', '75921', '75931','2','22.99'),
-('Dinner', 'Fried Fish', '90429', '41145', '4','13.50');
-
+('Breakfast','Kung Pao Chicken',    '46234', '41145', '4', '24.99'),
+('Lunch', 'Mushroom Chicken',       '50655', '75931', '8', '13.99'),
+('Dinner', 'Xo Noodles',            '59144', '58391', '3', '6.99'),
+('Lunch', 'Brocolli Beef',          '42544', '75931', '2', '22.99'),
+('Dinner', 'Fried Fish',            '65372', '41145', '4', '13.50'),
+('Breakfast', 'Fried Rice',         '52468', '75931', '2', '21.50'),
+('Dinner', 'Xo Noodles',            '23423', '58391', '4', '6.99'),
+('Lunch', 'Mushroom Chicken',       '17117', '41145', '5', '13.99'),
+('Dinner', 'Xo Noodles',            '36792', '75931', '4', '6.99'),
+('Breakfast', 'Kung Pao Chicken',   '65303', '58391', '3', '29.99'),
+('Lunch', 'Brocolli Beef',          '80191', '41145', '5', '22.99'),
+('Lunch', 'Brocolli Beef',          '76209', '41145', '1', '22.99'),
+('Lunch', 'Mushroom Chicken',       '44145', '75931', '2', '13.99'),
+('Dinner', 'Xo Noodles',            '84269', '41145', '4', '6.99'),
+('Lunch', 'Mushroom Chicken',       '70232', '58391', '3', '13.99'),
+('Dinner', 'Fried Fish',            '02822', '58391', '2', '13.50'),
+('Breakfast', 'Fried Rice',         '63540', '41145', '3', '21.50'),
+('Lunch', 'Brocolli Beef',          '77593', '75931', '1', '22.99');
 
 create table Categories
 (
@@ -523,8 +561,8 @@ create table ToGo
 );
 
 INSERT INTO ToGo(orderID, timeFoodIsReady) VALUES 
-('42311', '14:45:59'),
-('47814', '13:00:32');
+('65303', '14:45:59'),
+('76209', '13:00:32');
 
 
 create table EatIn
@@ -536,8 +574,8 @@ create table EatIn
 );
 
 INSERT INTO EatIn(orderID, tablePreference) VALUES 
-('47192', '1'),
-('75921', '4');
+('52468', '1'),
+('23423', '4');
 
 
 create table Web
@@ -550,4 +588,4 @@ create table Web
 );
 
 INSERT INTO Web(orderID, creditCardInfo, promoCodeEntered) VALUES
-('90429', '472957201', '231');
+('46234', '472957201', '231');
