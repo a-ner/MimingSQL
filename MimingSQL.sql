@@ -1,8 +1,18 @@
 create table WorkCrew
 (
+    crewName varchar(20) not null,
     dateWorked varchar(10) not null, -- yyyy-mm-dd
     constraint WorkCrewPK primary key (dateWorked)
 );
+
+INSERT INTO WorkCrew(crewName, dateWorked) VALUES
+('Cool Crew', '2018-12-01'),
+('Sad People', '2018-11-02'),
+('Fun Squad', '2018-10-03'),
+('Trash Makers', '2018-09-04'),
+('Frotnite Squad', '2018-08-05'),
+('Cartooners', '2018-07-06'),
+('Disney Squad', '2018-06-07');
 
 create table Staff
 (
@@ -16,25 +26,70 @@ create table Staff
     constraint StaffWorkCrewFK foreign key (dateWorked) references WorkCrew (dateWorked)
 );
 
+
+INSERT INTO Staff(staffID, staffType, staffFname, staffLname, dateHired, dateWorked) VALUES
+('12345', 'HeadChef', 'Joey', 'Pan', '2017-01-04', '2018-12-01'),
+('02010', 'HeadChef', 'Nick', 'Pot', '2003-01-02', '2018-12-01'),
+('03424', 'SousChef', 'Brock', 'Dune', '2003-03-12', '2018-11-02'),
+('44211', 'SousChef', 'Patrick', 'Ong', '2006-02-25', '2018-11-02'),
+('42345', 'LineCook', 'Melony', 'Luck', '2003-04-05', '2018-10-03'),
+('23514', 'LineCook', 'Jacob', 'Johnson', '2000-02-11', '2018-10-03'),
+('23178', 'MaitreD', 'Mickey', 'Mouse', '2001-02-01', '2018-09-04'),
+('47630', 'MaitreD', 'Minnie', 'Mouse', '2001-02-01', '2018-09-04'),
+('14441', 'WaitStaff', 'Barrack', 'Obama', '2017-06-08', '2018-08-05'),
+('67458', 'WaitStaff', 'Michael', 'Jordan', '2017-02-04', '2018-08-05'),
+('15741', 'Dishwasher', 'Will', 'Smith', '2001-12-07', '2018-07-06'),
+('18311', 'Dishwasher', 'Kylie', 'Jenner', '2017-12-05', '2018-07-06'),
+('47287', 'Manager', 'Tim', 'Cook', '2017-12-02', '2018-06-07'),
+('59831', 'Manager', 'Mark', 'Zuckerburg', '2017-12-11', '2018-06-07');
+
 create table WorkShift
 (
     shiftType varchar(20) not null,
     shiftHours varchar(10) not null,
     staffID varchar(10) not null,
     dateWorked varchar(10) not null,
-    constraint WorkShiftPK primary key (shiftType, shiftHours),
+    constraint WorkShiftPK primary key (staffID),
     constraint WorkShiftStaffFK foreign key (staffID) references Staff (staffID),
     constraint WorkShiftWorkCrewFK foreign key (dateWorked) references WorkCrew (dateWorked)
 );
+
+INSERT INTO WorkShift(shiftType, shiftHours, staffID, dateWorked) VALUES
+('MORNING', '6am - 2pm', '12345', '2018-12-01'),
+('EVENING', '2pm - 10pm', '02010', '2018-12-01'),
+('MORNING', '6am - 2pm', '03424', '2018-11-02'),
+('EVENING', '2pm - 10pm', '44211', '2018-11-02'),
+('MORNING', '6am - 2pm', '42345', '2018-10-03'),
+('EVENING', '2pm - 10pm', '23514', '2018-10-03'),
+('MORNING', '6am - 2pm', '23178', '2018-09-04'),
+('EVENING', '2pm - 10pm', '47630', '2018-09-04'),
+('MORNING', '6am - 2pm', '14441', '2018-08-05'),
+('EVENING', '2pm - 10pm', '67458', '2018-08-05'),
+('MORNING', '6am - 2pm', '15741', '2018-07-06'),
+('EVENING', '2pm - 10pm', '18311', '2018-07-06'),
+('MORNING', '6am - 2pm', '47287', '2018-06-07'),
+('EVENING', '2pm - 10pm', '59831', '2018-06-07');
+
 
 create table SalariedStaff
 (
     staffID varchar(10) not null,
     salary varchar(10) not null,
-    healthBenefits varchar(10) not null,
+    healthBenefits varchar(50) not null,
     constraint SalariedStaffPK primary key (staffID),
     constraint SalariedStaffStaffFK foreign key (staffID) references Staff (staffID)
 );
+
+INSERT INTO SalariedStaff(staffID, salary, healthBenefits) VALUES
+('42345', '60000', 'Health Insurance'),
+('23514', '55000', 'Life Insurance'),
+('03424', '58731', 'Vision Care'),
+('44211', '56458', 'Retirement Plan'),
+('12345', '64012', 'Health Insurance'),
+('02010', '65123', 'Vision Care'),
+('47287', '80000', 'Child Care'),
+('59831', '70000', 'Life Insurance');
+
 
 create table LineCook
 (
@@ -44,6 +99,11 @@ create table LineCook
     constraint LineCookSalariedStaffFK foreign key (staffID) references SalariedStaff (staffID)
 );
 
+INSERT INTO LineCook(staffID, activeLineCook) VALUES
+('42345', 'true'),
+('23514', 'false');
+
+
 create table WorkStations
 (
     staffID varchar(10) not null,
@@ -51,6 +111,11 @@ create table WorkStations
     constraint WorkStationsPK primary key (staffID),
     constraint WorkStationsLineCookFK foreign key (staffID) references LineCook (staffID)
 );
+
+INSERT INTO WorkStations(staffID, workStation) VALUES
+('42345', 'Butcher'),
+('23514', 'Grill Chef');
+
 
 create table HourlyStaff
 (
@@ -61,6 +126,15 @@ create table HourlyStaff
     constraint HourlyStaffStaffFK foreign key (staffID) references Staff (staffID)
 );
 
+INSERT INTO HourlyStaff(staffID, hoursWorked, payRate) VALUES
+('15741', '465', '12.50'),
+('18311', '249', '31.75'),
+('23178', '800', '32.06'),
+('47630', '642', '11.70'),
+('14441', '521', '44.50'),
+('67458', '210', '27.80');
+
+
 create table Dishwasher
 (
     staffID varchar(10) not null,
@@ -68,6 +142,11 @@ create table Dishwasher
     constraint DishwasherPK primary key (staffID),
     constraint DishwasherHourlyStaffFK foreign key (staffID) references HourlyStaff (staffID)
 );
+
+INSERT INTO Dishwasher(staffID, numOfDishesWashed) VALUES
+('15741', 'true'),
+('18311', 'false');
+
 
 create table Manager
 (
@@ -77,6 +156,11 @@ create table Manager
     constraint ManagerSalariedStaffFK foreign key (staffID) references SalariedStaff (staffID)
 );
 
+INSERT INTO Manager(staffID, activeManager) VALUES
+('47287', 'false'),
+('59831', 'true');
+
+
 create table MaitreD
 (
     staffID varchar(10) not null,
@@ -84,6 +168,11 @@ create table MaitreD
     constraint MaitreDPK primary key (staffID),
     constraint MaitreDHourlyStaffFK foreign key (staffID) references HourlyStaff (staffID)
 );
+
+INSERT INTO MaitreD(staffID, numOfPartiesSeated) VALUES
+('23178', 'false'),
+('47630', 'true');
+
 
 create table HeadChef
 (
@@ -93,6 +182,11 @@ create table HeadChef
     constraint HeadChefSalariedStaffFK foreign key (staffID) references SalariedStaff (staffID)
 );
 
+INSERT INTO HeadChef(staffID, activeManager) VALUES
+('12345', 'false'),
+('02010', 'true');
+
+
 create table WaitStaff
 (
     staffID varchar(10) not null,
@@ -100,6 +194,11 @@ create table WaitStaff
     constraint WaitStaffPK primary key (staffID),
     constraint WaitStaffHourlyStaffFK foreign key (staffID) references HourlyStaff (staffID)
 );
+
+INSERT INTO WaitStaff(staffID, tipEarned) VALUES
+('14441', 'true'),
+('67458', 'false');
+
 
 create table SousChef
 (
@@ -109,6 +208,11 @@ create table SousChef
     constraint SousChefHourlyStaffFK foreign key (staffID) references SalariedStaff (staffID)
 );
 
+INSERT INTO SousChef(staffID, activeSousChef) VALUES
+('03424','true'),
+('44211','false');
+
+
 create table Customer
 (
     customerID varchar(10) not null,
@@ -117,6 +221,21 @@ create table Customer
     address varchar(50) not null,
     constraint CustomerPK primary key (customerID)
 );
+
+INSERT INTO Customer(customerID, email, phonenumber, address) VALUES
+('38921', 'Target@target.com',      '(901)416-2197',    '02 Target St.'),
+('19011', 'Google@gmail.com',       '(302)296-3480',    '03 Google St.'),
+('59027', 'Facebook@facebook.com',  '(828)766-7320',    '01 Face St.'),
+('37853', 'Union@union.com',        '(994)752-6660',    '05 Union St.'),
+('03874', 'hello@gmail.com',        '(123)436-4523',    '14 Burger St.'),
+('48421', 'cheese@yahoo.com',       '(242)694-4341',    '23 Moutain Ln.'),
+('70971', 'Bob@hotmail.com',        '(583)793-4767',    '21 Aloha Avenue'),
+('68951', 'Apples@gmail.com',       '(563)784-6521',    '67 Park Avenue'),
+('58291', 'JingleBells@yahoo.com',  '(415)683-5324',    '21 Masonic'),
+('67301', 'aaronbuck@gmail.com',    '(232)387-0780',    '12345, 25 Pike Street, Miami FL'),
+('57831', 'flowjoe@gmail.com',      '(334)613-8819',    '56284, 16 Lakewood Street, Long Beach, CA'),
+('69271', 'alexsmith@gmail.com',    '(661)613-4443',    '94133, 45 Ocean Ave., San Francisco, CA'),
+('97047', 'kevinhart@gmail.com',    '(236)665-3960',    '62014, Pineapple Lane, Maui, HI');
 
 create table Party
 (
@@ -129,6 +248,11 @@ create table Party
     constraint PartyMaitreDFK foreign key (staffID) references MaitreD (staffID)
 );
 
+INSERT INTO Party(customerID, partyID, staffID, partySize) VALUES
+('03874', '00001', '23178', '4'),
+('70971', '00002', '47630', '8');
+
+
 create table Recipe
 (
     staffID varchar(10) not null,
@@ -138,6 +262,11 @@ create table Recipe
     constraint RecipePK primary key (recipeID),
     constraint RecipeHeadChefFK foreign key (staffID) references HeadChef (staffID)
 );
+
+INSERT INTO Recipe(staffID, recipeID, recipeName, dateCreated) VALUES
+('12345', '17313', 'Chow Ming', '2017-05-10'),
+('02010', '46281', 'Mimings Fried Rice', '2015-02-17');
+
 
 create table Tables
 (
@@ -149,6 +278,11 @@ create table Tables
     constraint TablesPartyFK foreign key (partyID) references Party (partyID)
 );
 
+INSERT INTO Tables(staffID, tableNumber, partyID) VALUES
+('14441', '1', '00001'),
+('67458', '2', '00002');
+
+
 create table Ingredients
 (
     recipeID varchar(10) not null,
@@ -156,6 +290,10 @@ create table Ingredients
     constraint IngredientsPK primary key (recipeID),
     constraint IngredientsRecipeFK foreign key (recipeID) references Recipe (recipeID)
 );
+
+INSERT INTO Ingredients(recipeID, ingredientName) VALUES
+('17313', 'noodles'),
+('46281', 'rice');
 
 create table PrivateCustomer
 (
@@ -166,6 +304,13 @@ create table PrivateCustomer
     constraint PrivateCustomerPK primary key (customerID),
     constraint PrivateCustomerCustomerFK foreign key (customerID) references Customer (customerID)
 );
+
+INSERT INTO PrivateCustomer(customerID, lastName, firstName, snailMail) VALUES
+('67301', 'Buck', 'Aaron', '12345, 25 Pike Street, Miami FL'),
+('57831', 'Joe', 'Flow', '56284, 16 Lakewood Street, Long Beach, CA'),
+('69271', 'Smith', 'Alex', '94133, 45 Ocean Ave., San Francisco, CA'),
+('97047', 'Hart', 'Kevin', '62014, Pineapple Lane, Maui, HI');
+
 
 create table Mentorship
 (
@@ -178,6 +323,9 @@ create table Mentorship
     constraint MentorshipSousChefMentorFK foreign key (mentorID) references SousChef (staffID)
 );
 
+INSERT INTO Mentorship(staffID, mentorID, mentorStartDate, mentorEndDate) VALUES
+('03424', '44211', '2001-03-13', '2001-06-20');
+
 create table CorporateCustomer
 (
     customerID varchar(10) not null,
@@ -187,12 +335,28 @@ create table CorporateCustomer
     constraint CorpCustCustomerFK foreign key (customerID) references Customer (customerID)
 );
 
+INSERT INTO CorporateCustomer(customerID, corpName, orgName) VALUES
+('38921', 'Target', 'Targetors'),
+('19011', 'Google', 'Google Eats'),
+('59027', 'Facebook', 'Facebook Foodies'),
+('37853', 'Union', 'Feeling Hungry');
+
+
 create table MenuItem
 (
     itemName varchar(50) not null,
     spiciness varchar(10) not null,
     constraint MenuItemPK primary key (itemName)
 );
+
+INSERT INTO MenuItem(itemName, spiciness) VALUES
+('Kung Pao Chicken', 'Mild'),
+('Mushroom Chicken', 'Piquant'),
+('Xo Noodles', 'Hot'),
+('Brocolli Beef', 'Tangy'),
+('Fried Fish', 'Hot'),
+('Fried Rice','Oh My God');
+
 
 create table Specialty
 (
@@ -203,6 +367,11 @@ create table Specialty
     constraint SpecialtySousChefFK foreign key (staffID) references SousChef (staffID),
     constraint SpecialtyMenuItemFK foreign key (itemName) references MenuItem (itemName)
 );
+
+INSERT INTO Specialty(staffID, itemName, dateSpecialized) VALUES
+('03424', 'Kung Pao Chicken', '2015-08-07'),
+('44211', 'Brocolli Beef', '2017-10-04');
+
 
 create table MimingsMoneyAccount
 (
@@ -216,12 +385,25 @@ create table MimingsMoneyAccount
     constraint MMACustomerFK foreign key (customerID) references Customer (customerID)
 );
 
+INSERT INTO MimingsMoneyAccount(customerID, MMAccID, MMSpent, MMEarnedTotal, realMoneySpentTotal, MMleft) VALUES
+('03874', '00000', '371913', '3784193', '78311', '39231'),
+('48421', '37814', '4892', '5729', '5832', '907392'),
+('70971', '47202', '5789', '65817', '589', '69332'),
+('68951', '68921', '689116', '5729', '58211', '5821'),
+('58291', '572911', '6832', '68291', '683011', '68392');
+
 create table Menu
 (
     menuType varchar(10) not null,
-    menuHoursAvailable varchar(10) not null,
+    menuHoursAvailable varchar(50) not null,
     constraint MenuPK primary key (menuType)
 );
+
+INSERT INTO Menu(menuType, menuHoursAvailable) VALUES
+('Breakfast', '8:00am-11:30am'),
+('Lunch', '11:30am-4:30pm'),
+('Dinner', '4:30pm-9pm');
+
 
 create table Orders
 (
@@ -232,6 +414,14 @@ create table Orders
     constraint OrdersCustomerFK foreign key (customerID) references Customer (customerID)
 );
 
+INSERT INTO Orders(orderID, customerID, timeOfOrder) VALUES
+('42311', '03874', '13:45:59'),
+('47814', '48421', '12:30:32'),
+('47192', '70971', '15:53:12'),
+('75921', '68951', '10:46:14'),
+('90429', '58291', '9:57:12');
+
+
 create table Payment
 (
     orderID varchar(10) not null,
@@ -240,6 +430,14 @@ create table Payment
     constraint PaymentPK primary key (orderID, paymentType, amountTotal),
     constraint PaymentOrdersFK foreign key (orderID) references Orders (orderID)
 );
+
+INSERT INTO Payment(orderID, paymentType, amountTotal) VALUES
+('42311', 'Cash', '30'),
+('47814', 'Cash', '20'),
+('47192', 'Credit', '40'),
+('75921', 'Cash', '100'),
+('90429', 'Credit', '201');
+
 
 create table MenuPricing
 (
@@ -252,6 +450,15 @@ create table MenuPricing
     constraint MenuPricingMenuItemFK foreign key (itemName) references MenuItem (itemName)
 );
 
+INSERT INTO MenuPricing(menuType, itemName, itemPrice, itemSize) VALUES
+('Breakfast', 'Kung Pao Chicken', '24.99', 'small'),
+('Lunch', 'Mushroom Chicken', '13.99', 'medium'),
+('Dinner', 'Xo Noodles', '6.99', 'large'),
+('Lunch', 'Brocolli Beef', '22.99', 'medium'),
+('Dinner', 'Fried Fish', '13.50', 'small'),
+('Breakfast', 'Fried Rice', '21.50', 'medium');
+
+
 create table Discount
 (
     discountID varchar(10) not null,
@@ -260,6 +467,12 @@ create table Discount
     orderOver1000Disc varchar(10) not null,
     constraint DiscountPK primary key (discountID)
 );
+
+INSERT INTO Discount(discountID, orderOver200Disc, orderOver500Disc, orderOver1000Disc) VALUES
+('41145', '30', '40', '50'),
+('75931', '25', '30', '35'),
+('58391', '10', '15', '20');
+
 
 create table OrderDetails
 (
@@ -270,19 +483,36 @@ create table OrderDetails
     quantityOrdered varchar(10) not null,
     priceEach varchar(10) not null,
     constraint OrderDetails primary key (menuType, itemName, orderID),
-    constraint ODMPtypeFK foreign key (menuType) references MenuPricing (menuType),
-    constraint ODMPnameFK foreign key (itemName) references MenuPricing (itemName),
+    constraint ODMPtypeFK foreign key (menuType) references Menu (menuType),
+    constraint ODMPnameFK foreign key (itemName) references MenuItem (itemName),
     constraint OrderDetailsOrdersFK foreign key (orderID) references Orders (orderID),
     constraint OrderDetailsDiscountFK foreign key (discountID) references Discount (discountID)
 );
 
+INSERT INTO OrderDetails(menuType, itemName, orderID, discountID, quantityOrdered, priceEach) VALUES
+('Breakfast','Kung Pao Chicken', '42311', '41145', '1', '24.99'),
+('Lunch', 'Mushroom Chicken', '47814', '75931', '2', '13.99'),
+('Dinner', 'Xo Noodles', '47192', '58391', '2','6.99'),
+('Lunch', 'Brocolli Beef', '75921', '75931','2','22.99'),
+('Dinner', 'Fried Fish', '90429', '41145', '4','13.50');
+
+
 create table Categories
 (
     itemName varchar(50) not null,
-    category varchar(10) not null,
+    category varchar(50) not null,
     constraint CategoriesPK primary key (itemName, category),
     constraint CategoriesMenuItemFK foreign key (itemName) references MenuItem (itemName)
 );
+
+INSERT INTO Categories(itemName, category) VALUES
+('Kung Pao Chicken', 'Meat Entrees'),
+('Mushroom Chicken', 'Meat Entrees'),
+('Xo Noodles', 'Chow Mein'),
+('Brocolli Beef', 'Meat Entrees'),
+('Fried Fish', 'Appetizer'),
+('Fried Rice', 'Meat Entrees');
+
 
 create table ToGo
 (
@@ -292,6 +522,11 @@ create table ToGo
     constraint ToGoOrdersFK foreign key (orderID) references Orders (orderId)
 );
 
+INSERT INTO ToGo(orderID, timeFoodIsReady) VALUES 
+('42311', '14:45:59'),
+('47814', '13:00:32');
+
+
 create table EatIn
 (
     orderID varchar(10) not null,
@@ -299,6 +534,11 @@ create table EatIn
     constraint EatInPK primary key (orderID),
     constraint EatInOrdersFK foreign key (orderID) references Orders (orderId)
 );
+
+INSERT INTO EatIn(orderID, tablePreference) VALUES 
+('47192', '1'),
+('75921', '4');
+
 
 create table Web
 (
@@ -308,3 +548,6 @@ create table Web
     constraint WebPK primary key (orderID),
     constraint WebOrdersFK foreign key (orderID) references Orders (orderId)
 );
+
+INSERT INTO Web(orderID, creditCardInfo, promoCodeEntered) VALUES
+('90429', '472957201', '231');
